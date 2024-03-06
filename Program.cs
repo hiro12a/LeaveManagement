@@ -1,5 +1,8 @@
 using LeaveManagement.Data;
+using LeaveManagement.Data.Repository;
+using LeaveManagement.Data.Repository.IRepository;
 using LeaveManagement.Models;
+using LeaveManagement.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +18,13 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 // For Identity. Allows us to add extra field to identityUser
 builder.Services.AddIdentity<Employee, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Automapper
+builder.Services.AddAutoMapper(typeof(Mapper));
+
+// Reference Repository
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 
 var app = builder.Build();
 

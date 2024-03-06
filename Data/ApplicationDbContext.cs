@@ -9,8 +9,8 @@ namespace LeaveManagement.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
 
-        public DbSet<Employee> employees { get; set; }
-        public DbSet<LeaveAllocations> leaveAllocations {get;set;}
-        public DbSet<LeaveType> leaveTypes {get;set;}
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<LeaveAllocations> LeaveAllocations {get;set;}
+        public DbSet<LeaveType> LeaveTypes {get;set;}
     }
 }

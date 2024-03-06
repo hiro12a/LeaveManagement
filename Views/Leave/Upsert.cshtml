@@ -1,0 +1,46 @@
+@model LeaveType
+@{
+    ViewData["Title"] = "Upsert";
+}
+<!--Depending on the id, it'll show update or create-->
+<h1>@(Model.Id !=0? "Update" : "Create") Leave Types</h1>
+<div class="w-50">
+    <form method="post">
+        <input hidden asp-for="Id">
+        <div class="form-control border-0 pb-3">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control">  
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-control border-0 pb-3">
+            <label asp-for="DefaultDays"></label>
+            <input asp-for="DefaultDays" class="form-control">  
+            <span asp-validation-for="DefaultDays" class="text-danger"></span>
+        </div>
+        <div class="form-control border-0 pb-3">
+            <label asp-for="DateCreated"></label>
+            <input disabled asp-for="DateCreated" class="form-control">  
+            <span asp-validation-for="DateCreated" class="text-danger"></span>
+        </div>
+        <div class="form-control border-0 pb-3">
+            <label asp-for="DateModified"></label>
+            <input disabled asp-for="DateModified" class="form-control">  
+            <span asp-validation-for="DateModified" class="text-danger"></span>
+        </div>
+        <div class="form-control border-0">
+            @if(Model.Id == 0)
+            {
+                <button type="submit" class="btn btn-primary">Create</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary">Update</button>
+            }
+            <a asp-controller="Leave" asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial"></partial>
+}
