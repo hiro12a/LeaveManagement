@@ -1,4 +1,4 @@
-@model LeaveType
+@model LeaveTypeVM
 @{
     ViewData["Title"] = "Upsert";
 }
@@ -16,16 +16,6 @@
             <label asp-for="DefaultDays"></label>
             <input asp-for="DefaultDays" class="form-control">  
             <span asp-validation-for="DefaultDays" class="text-danger"></span>
-        </div>
-        <div class="form-control border-0 pb-3">
-            <label asp-for="DateCreated"></label>
-            <input disabled asp-for="DateCreated" class="form-control">  
-            <span asp-validation-for="DateCreated" class="text-danger"></span>
-        </div>
-        <div class="form-control border-0 pb-3">
-            <label asp-for="DateModified"></label>
-            <input disabled asp-for="DateModified" class="form-control">  
-            <span asp-validation-for="DateModified" class="text-danger"></span>
         </div>
         <div class="form-control border-0">
             @if(Model.Id == 0)

@@ -23,8 +23,7 @@ builder.Services.AddIdentity<Employee, IdentityRole>().AddEntityFrameworkStores<
 builder.Services.AddAutoMapper(typeof(Mapper));
 
 // Reference Repository
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
+builder.Services.AddScoped<IUnitofWork, UnitofWork>();
 
 var app = builder.Build();
 

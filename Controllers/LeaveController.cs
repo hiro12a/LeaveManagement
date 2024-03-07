@@ -8,11 +8,11 @@ namespace LeaveManagement.Controllers
 {
     public class LeaveController : Controller
     {
-        private readonly ILeaveTypeRepository _leaveType;
         private readonly IMapper _mapper;
-        public LeaveController(IMapper mapper, ILeaveTypeRepository leaveType)
+        private readonly IUnitofWork _unitofwork;
+        public LeaveController(IMapper mapper, IUnitofWork unitofWork)
         {
-            _leaveType = leaveType;
+            _unitofwork = unitofWork;
             _mapper = mapper;
         }
 
@@ -20,7 +20,7 @@ namespace LeaveManagement.Controllers
         {
             // Map LeaveTypeVM to LeaveType and display all the data
             // We don't want to display directly from the database so we use LeaveTypeVM
-            var leaveTypes = _mapper.Map<List<LeaveTypeVM>>(await _leaveType.GetAllAsync());
+            var leaveTypes = _mapper.Map<List<LeaveTypeVM>>(await _unitofwork.LeaveTypes.GetAllAsync());
             return View(leaveTypes);
         }
         public async Task<IActionResult> Upsert(int? id)
@@ -28,12 +28,12 @@ namespace LeaveManagement.Controllers
             // If there is no existing object, go to a create view
             if(id == null || id == 0)
             {
-                return View(new LeaveType());
+                return View(new LeaveTypeVM());
             }
             else
             {
                 // There is an existing obj, get the data and display it
-                var leaveTypes = await _leaveType.GetAsync(id);   
+                var leaveTypes = await _unitofwork.LeaveTypes.GetAsync(id);   
                 if(leaveTypes == null)
                 {
                     return NotFound();
@@ -52,12 +52,12 @@ namespace LeaveManagement.Controllers
                 if(obj.Id == 0)
                 {
                     // Create the obj 
-                    await _leaveType.AddAsync(obj); 
+                    await _unitofwork.LeaveTypes.AddAsync(obj); 
                 }
                 else
                 {
                     // Update it 
-                    await _leaveType.UpdateAsync(obj);
+                    await _unitofwork.LeaveTypes.UpdateAsync(obj);
                 }
                 
                  return RedirectToAction(nameof(Index));
@@ -67,7 +67,7 @@ namespace LeaveManagement.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            await _leaveType.DeleteAsync(id);
+            await _unitofwork.LeaveTypes.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
