@@ -1,0 +1,25 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<Employee> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<Employee> UserManager
+
+
+<ul class="navbar-nav">
+    <!--If user is signed In-->
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark text-capitalize">Hello @UserManager.GetUserName((User)).Replace("@employee.com","")</a>
+        </li>
+        <li class="nav-item">
+            <a asp-controller="Employee" asp-action="Logout" class="nav-link text-dark">Logout</a>
+        </li> 
+    }
+    else
+    {
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "Employee")" class="nav-link text-dark">Login</a>     
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Register", "Employee")" class="nav-link text-dark">Register</a>     
+        </li>
+    }
+</ul>

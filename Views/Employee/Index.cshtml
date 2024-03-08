@@ -1,0 +1,47 @@
+@model LoginVM
+
+<div class="container py-5">
+    <div class="d-flex justify-content-center">
+        <div class="card w-50">
+            <div class="card-header text-center">
+                <h3>Login</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-action="Index">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <!--Email and Passowrd Section-->
+                            <div class="form-floating mb-3">
+                                <input asp-for="Email" class="form-control" aria-required="true" />
+                                <label asp-for="Email" class="form-label text-muted ms-2"></label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Password" class="form-control" />
+                                <label asp-for="Password" class="form-label text-muted ms-2"></label>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <!--Checkbox and Login-->
+                            <div class="col-12 d-flex">
+                                <div class="col checkbox mb-3 pt-2">
+                                    <input asp-for="RememberMe" class="form-check-input" />
+                                    <label class="">Remember Me</label>
+                                </div>
+                                <div class="col-">
+                                    <button type="submit" class="btn btn-success" style="width:100px;">Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
