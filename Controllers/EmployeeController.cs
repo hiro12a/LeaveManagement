@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using LeaveManagement.Data.Repository.IRepository;
 using LeaveManagement.Models;
 using LeaveManagement.Models.ViewModels;
 using LeaveManagement.Utility;
@@ -14,17 +16,26 @@ using Microsoft.Extensions.Logging;
 
 namespace LeaveManagement.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin)]
     public class EmployeeController : Controller
     {
         private readonly UserManager<Employee> _userManager;
         private readonly SignInManager<Employee> _signInManager; // Logs in the user
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IMapper _mapper;
+        private readonly ILeaveAllocationRepository _leaveAllocation;
 
-        public EmployeeController(UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager, SignInManager<Employee> signInManager)
+        public EmployeeController(UserManager<Employee> userManager, 
+        RoleManager<IdentityRole> roleManager, 
+        SignInManager<Employee> signInManager, 
+        IMapper mapper,
+        ILeaveAllocationRepository leaveAllocationRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _mapper = mapper;
+            _leaveAllocation = leaveAllocationRepository;
         }
 
         // Login Page
@@ -166,6 +177,25 @@ namespace LeaveManagement.Controllers
         public IActionResult Error()
         {
             return View("Error!");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> EmployeeLeaveAllocation()
+        {
+            // Get employees with employee role
+            var employee = await _userManager.GetUsersInRoleAsync(SD.Role_Employee);
+            var model = _mapper.Map<List<EmployeeListVM>>(employee);
+            return View(model);
+        }
+
+        public async Task<IActionResult> ViewAllocation(string id)
+        {
+            var employee = await _leaveAllocation.EmployeeAllocationVM(id);
+            return View(employee);
         }
     }
 }

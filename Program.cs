@@ -23,7 +23,15 @@ builder.Services.AddIdentity<Employee, IdentityRole>().AddEntityFrameworkStores<
 builder.Services.AddAutoMapper(typeof(Mapper));
 
 // Reference Repository
-builder.Services.AddScoped<IUnitofWork, UnitofWork>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
+builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
+
+builder.Services.ConfigureApplicationCookie(option =>
+{
+    option.AccessDeniedPath = new PathString("/Employee/AccessDenied");
+    option.LoginPath = new PathString("/Employee/Login");
+});
 
 var app = builder.Build();
 

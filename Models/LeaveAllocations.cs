@@ -14,11 +14,10 @@ namespace LeaveManagement.Models
         // Connect LeaveType to leave allocation so employee can select what leave type they want
         public int LeaveTypeId {get;set;}
         [ForeignKey(nameof(LeaveTypeId))]
-        public LeaveType? LeaveType;
+        public LeaveType? LeaveType {get;set;}
 
-        // Connect employee to leave allocation so we can know who's requesting the leave
-        public int EmployeeId {get;set;}
-        [ForeignKey(nameof(EmployeeId))]
-        public Employee? Employee;
+        public string? EmployeeId {get;set;}
+
+        public int Period {get;set;}
     }
 }

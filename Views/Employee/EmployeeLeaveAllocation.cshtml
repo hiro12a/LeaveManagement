@@ -1,0 +1,54 @@
+@model IEnumerable<EmployeeListVM>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="py-5">
+<div class="d-flex justify-content-between pb-3">
+    <div>
+        <h1>Employee Leave Allocations</h1>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateJoined)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td style="width:20%">
+                    @obj.FirstName
+                </td>
+                <td style="width:20%">
+                    @obj.LastName
+                </td>
+                <td style="width:20%">
+                    @obj.Email
+                </td>
+                <td style="width:20%">
+                    @obj.DateJoined
+                </td>
+                <td style="width:20%">
+                    <a class="btn btn-primary" asp-controller="Employee" asp-action="ViewAllocation" asp-route-id="@obj.Id">View Allocation</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>

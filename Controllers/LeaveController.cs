@@ -2,25 +2,34 @@ using AutoMapper;
 using LeaveManagement.Data.Repository.IRepository;
 using LeaveManagement.Models;
 using LeaveManagement.Models.ViewModels;
+using LeaveManagement.Utility;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeaveManagement.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin)]
     public class LeaveController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IUnitofWork _unitofwork;
-        public LeaveController(IMapper mapper, IUnitofWork unitofWork)
+        private readonly ILeaveAllocationRepository _leaveAlloaction;
+        private readonly ILeaveTypeRepository _leaveType;
+        public LeaveController(IMapper mapper, 
+                    ILeaveAllocationRepository leaveAllocationRepository,
+                    ILeaveTypeRepository leaveTypRepository)
         {
-            _unitofwork = unitofWork;
             _mapper = mapper;
+            _leaveAlloaction = leaveAllocationRepository;
+            _leaveType = leaveTypRepository;
         }
 
         public async Task<IActionResult> Index()
         {
             // Map LeaveTypeVM to LeaveType and display all the data
             // We don't want to display directly from the database so we use LeaveTypeVM
-            var leaveTypes = _mapper.Map<List<LeaveTypeVM>>(await _unitofwork.LeaveTypes.GetAllAsync());
+            var leaveTypes = _mapper.Map<List<LeaveTypeVM>>(await _leaveType.GetAllAsync());
             return View(leaveTypes);
         }
         public async Task<IActionResult> Upsert(int? id)
@@ -33,7 +42,7 @@ namespace LeaveManagement.Controllers
             else
             {
                 // There is an existing obj, get the data and display it
-                var leaveTypes = await _unitofwork.LeaveTypes.GetAsync(id);   
+                var leaveTypes = await _leaveType.GetAsync(id);   
                 if(leaveTypes == null)
                 {
                     return NotFound();
@@ -52,12 +61,12 @@ namespace LeaveManagement.Controllers
                 if(obj.Id == 0)
                 {
                     // Create the obj 
-                    await _unitofwork.LeaveTypes.AddAsync(obj); 
+                    await _leaveType.AddAsync(obj); 
                 }
                 else
                 {
                     // Update it 
-                    await _unitofwork.LeaveTypes.UpdateAsync(obj);
+                    await _leaveType.UpdateAsync(obj);
                 }
                 
                  return RedirectToAction(nameof(Index));
@@ -67,7 +76,7 @@ namespace LeaveManagement.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            await _unitofwork.LeaveTypes.DeleteAsync(id);
+            await _leaveType.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
@@ -75,6 +84,14 @@ namespace LeaveManagement.Controllers
         public IActionResult Error()
         {
             return View("Error!");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AllocateLeave(int id)
+        {
+            await _leaveAlloaction.LeaveAllocation(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

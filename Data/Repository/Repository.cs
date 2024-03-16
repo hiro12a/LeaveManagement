@@ -29,6 +29,12 @@ namespace LeaveManagement.Data.Repository
             return entity;
         }
 
+        public async Task AddRangeAsync(List<T> entity)
+        {
+            await _db.AddRangeAsync(entity);
+            await _db.SaveChangesAsync();
+        }
+
         // Remove item from database
         public async Task DeleteAsync(int id)
         {

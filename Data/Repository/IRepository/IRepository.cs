@@ -13,6 +13,7 @@ namespace LeaveManagement.Data.Repository.IRepository
         Task<List<T>> GetAllAsync(); // Get a list of objs
         Task<T> AddAsync(T entity); // Adds obj to database
         Task<bool> Exists(int id); // Make sure obj exists in database by its id
+        Task AddRangeAsync(List<T> entity); // Get a list of items in the obj
         Task DeleteAsync(int id); // Delete obj by id
         Task UpdateAsync(T entity); // Update objs
     }

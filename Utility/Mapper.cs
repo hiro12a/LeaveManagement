@@ -13,7 +13,10 @@ namespace LeaveManagement.Utility
         public Mapper()
         {
             // ReverseMap allows us to automatically reverse it from leavetypeVm to leavetype
-            CreateMap<LeaveTypeVM, LeaveType>().ReverseMap();
+            CreateMap<LeaveType, LeaveTypeVM>().ReverseMap();
+            CreateMap<Employee, EmployeeListVM>().ReverseMap();
+            CreateMap<Employee, EmployeeAllocationVM>().ReverseMap();
+            CreateMap<LeaveAllocations, LeaveAllocationsVM>().ReverseMap();
         }
     }
 }
