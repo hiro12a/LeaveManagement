@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace LeaveManagement.Models
     public class LeaveAllocations : BaseEntity
     {
         // Number of days the employee wants to leave 
+        [DisplayName("Number of Days")]
         public int NumberOfDays {get;set;}
 
         // Connect LeaveType to leave allocation so employee can select what leave type they want

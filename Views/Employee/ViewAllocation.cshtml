@@ -68,7 +68,7 @@
                         <td class="border" style="width:20%">@obj.NumberOfDays</td>
                         <td class="border" style="width:20%">
                             <!--Edit Button-->
-                            <a class="btn btn-warning" asp-controller="Employee" asp-action="EditLeaveAllocation">Edit Allocation</a>
+                            <a class="btn btn-warning" asp-controller="Employee" asp-action="EditLeaveAllocation" asp-route-id="@obj.Id">Edit Allocation</a>
                         </td>
                     </tr>
                 }

@@ -1,0 +1,99 @@
+@model IEnumerable<LeaveTypeVM>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="py-5">
+<div class="d-flex justify-content-between pb-3">
+    <div>
+        <h1>Leave Types</h1>
+    </div>
+    <div>
+        <a class="btn btn-primary" asp-action="Upsert" style="width:150px">Create New</a>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DefaultDays)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td style="width:20%">
+                    @obj.Name
+                </td>
+                <td style="width:60%">
+                    @obj.DefaultDays
+                </td>
+                <td style="width:20%">
+                    <!--Edit-->
+                    <a class="btn btn-success" title="Edit Leave" asp-action="Upsert" asp-route-id="@obj.Id"><span class="bi bi-pencil-fill"></span></a>
+
+                    <!--Allocate Leave-->
+                    <button type="button" data-id="@obj.Id" class="btn btn-warning allocateBtn" title="Allocate Leave"><span class="bi bi-x-diamond"></span></button>
+
+                    <!--Display popup when you click delete-->
+                    <button type="button" class="btn btn-danger" title="Delete Leave" data-bs-toggle="modal" data-bs-target="#delete-@(obj.Id)"><span class="bi bi-trash-fill"></button>
+
+                    <!--Popup-->
+                    <div class="modal fade" id="delete-@(obj.Id)" table-index="-1" aria-hidden="true" data-bs-backdrop="static">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="card-header">
+                                    <h1 class="text-center text-dark">Delete @obj.Name</h1>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-center text-dark">Are you sure you want to delete @obj.Name?</p>
+                                </div>
+                                <div class="d-flex justify-content-center pb-4">
+                                    <a asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">Delete</a>
+                                    <btn type="button" data-bs-dismiss="modal" class="btn btn-secondary">Cancel</btn> <!--Closes the popup-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+
+<form id="allocationForm" asp-action="AllocateLeave">
+    <input type="hidden" id="leaveTypeIdAllocate" name="Id"/>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function(){
+            $('.table').DataTable();
+
+            $('.allocateBtn').click(function(e) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to allocation this leave to all employees?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                }).then((confirm) => {
+                        if(confirm){
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            $('#leaveTypeIdAllocate').val(id);
+                            $('#allocationForm').submit();
+                        }
+                    });
+            });
+        });
+    </script>
+}

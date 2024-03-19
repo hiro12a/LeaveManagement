@@ -1,0 +1,35 @@
+@model EditLeaveAllocationsVM
+
+@{
+    ViewData["Title"] = "Edit Allocation";
+}
+
+<h1>Edit @Model.LeaveType?.Name Allocation for @Model.Employee.FirstName @Model.Employee.LastName</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="EditLeaveAllocation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="EmployeeId" />
+            <input type="hidden" asp-for="LeaveTypeId" />
+            <div class="form-group">
+                <label asp-for="NumberOfDays" class="control-label"></label>
+                <input asp-for="NumberOfDays" class="form-control" />
+                <span asp-validation-for="NumberOfDays" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Period" class="control-label"></label>
+                <input asp-for="Period" class="form-control" />
+                <span asp-validation-for="Period" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <a asp-controller="Employee" asp-action="EmployeeLeaveAllocation" class="btn btn-dark" >Back to List</a> &nbsp;
+                <button type="submit" class="btn btn-primary btn-block">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

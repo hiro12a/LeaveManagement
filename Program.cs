@@ -22,16 +22,22 @@ builder.Services.AddIdentity<Employee, IdentityRole>().AddEntityFrameworkStores<
 // Automapper
 builder.Services.AddAutoMapper(typeof(Mapper));
 
+// Allows us to use IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
 // Reference Repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
+builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
 
+// Redirect
 builder.Services.ConfigureApplicationCookie(option =>
 {
-    option.AccessDeniedPath = new PathString("/Employee/AccessDenied");
-    option.LoginPath = new PathString("/Employee/Login");
+    option.AccessDeniedPath = $"/Employee/AccessDenied";
+    option.LoginPath = $"/Employee/Index";
 });
+
 
 var app = builder.Build();
 

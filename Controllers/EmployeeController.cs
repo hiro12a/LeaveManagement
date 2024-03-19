@@ -16,7 +16,6 @@ using Microsoft.Extensions.Logging;
 
 namespace LeaveManagement.Controllers
 {
-    [Authorize(Roles = SD.Role_Admin)]
     public class EmployeeController : Controller
     {
         private readonly UserManager<Employee> _userManager;
@@ -24,18 +23,21 @@ namespace LeaveManagement.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly ILeaveAllocationRepository _leaveAllocation;
+        private readonly ILeaveTypeRepository _leaveType;
 
         public EmployeeController(UserManager<Employee> userManager, 
         RoleManager<IdentityRole> roleManager, 
         SignInManager<Employee> signInManager, 
         IMapper mapper,
-        ILeaveAllocationRepository leaveAllocationRepository)
+        ILeaveAllocationRepository leaveAllocationRepository, 
+        ILeaveTypeRepository leaveType)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _mapper = mapper;
             _leaveAllocation = leaveAllocationRepository;
+            _leaveType = leaveType;
         }
 
         // Login Page
@@ -184,6 +186,8 @@ namespace LeaveManagement.Controllers
             return View();
         }
 
+        [Authorize(Roles = SD.Role_Admin)]
+        // Get the list of employees and their leave allocations
         public async Task<IActionResult> EmployeeLeaveAllocation()
         {
             // Get employees with employee role
@@ -192,10 +196,59 @@ namespace LeaveManagement.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = SD.Role_Admin)]
+        // Get a detailed view of the employees leave allocation
         public async Task<IActionResult> ViewAllocation(string id)
         {
             var employee = await _leaveAllocation.EmployeeAllocationVM(id);
             return View(employee);
+        }
+
+        [Authorize(Roles = SD.Role_Admin)]
+        // Edit the employee leave allocation
+        public async Task<IActionResult> EditLeaveAllocation(int id)
+        {
+            var model = await _leaveAllocation.GetEmployeeAllocation(id);
+            if(model == null)
+            {
+                return NotFound();
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = SD.Role_Admin)]
+        public async Task<IActionResult> EditLeaveAllocation(int id, EditLeaveAllocationsVM model)
+        {
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                    var leaveAllocation = await _leaveAllocation.GetAsync(model.Id);
+                    if(leaveAllocation == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update these from the model
+                    leaveAllocation.Period = model.Period;
+                    leaveAllocation.NumberOfDays = model.NumberOfDays;
+
+                    // Commit  and save
+                    await _leaveAllocation.UpdateAsync(leaveAllocation);
+
+                    return RedirectToAction(nameof(ViewAllocation), new { id = model.EmployeeId });
+                }        
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An Error Has Occured. Please Try Again Later");
+            }
+
+            model.Employee = _mapper.Map<EmployeeListVM>(await _userManager.FindByIdAsync(model.EmployeeId));  
+            model.LeaveType = _mapper.Map<LeaveTypeVM>(await _leaveType.GetAsync(model.LeaveTypeId));
+            return View(model);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,10 +20,14 @@ namespace LeaveManagement.Models.ViewModels
         [Required]
         [DataType(DataType.Password)] // Hides the password
         [Compare(nameof(Password))] // Makes sure confirm password is the same as pasword
+        [DisplayName("Confirm Password")]
         public string? ConfirmPassword{get;set;}
 
+        [DisplayName("First Name")]
         public string? FirstName {get;set;}
+        [DisplayName("Last Name")]
         public string? LastName {get;set;}
+        [DisplayName("Phone Number")]
         public string? PhoneNumber {get;set;}
         public string? Address {get;set;}
         public DateTime JoinDate {get;set;}

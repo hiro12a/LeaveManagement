@@ -14,12 +14,12 @@
                             <!--Email and Passowrd Section-->
                             <div class="form-floating mb-3">
                                 <input asp-for="Email" class="form-control" aria-required="true" />
-                                <label asp-for="Email" class="form-label text-muted ms-2"></label>
+                                <label asp-for="Email" class="form-label text-muted"></label>
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                             <div class="form-floating mb-3">
                                 <input asp-for="Password" class="form-control" />
-                                <label asp-for="Password" class="form-label text-muted ms-2"></label>
+                                <label asp-for="Password" class="form-label text-muted"></label>
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
 
@@ -29,7 +29,7 @@
                                     <input asp-for="RememberMe" class="form-check-input" />
                                     <label class="">Remember Me</label>
                                 </div>
-                                <div class="col-">
+                                <div class="col-2">
                                     <button type="submit" class="btn btn-success" style="width:100px;">Login</button>
                                 </div>
                             </div>
