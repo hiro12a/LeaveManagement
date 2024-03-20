@@ -200,7 +200,7 @@ namespace LeaveManagement.Controllers
         // Get a detailed view of the employees leave allocation
         public async Task<IActionResult> ViewAllocation(string id)
         {
-            var employee = await _leaveAllocation.EmployeeAllocationVM(id);
+            var employee = await _leaveAllocation.GetEmployeeAllocation(id);
             return View(employee);
         }
 
@@ -208,7 +208,7 @@ namespace LeaveManagement.Controllers
         // Edit the employee leave allocation
         public async Task<IActionResult> EditLeaveAllocation(int id)
         {
-            var model = await _leaveAllocation.GetEmployeeAllocation(id);
+            var model = await _leaveAllocation.GetEmployeeAllocations(id);
             if(model == null)
             {
                 return NotFound();

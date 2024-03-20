@@ -7,12 +7,12 @@ namespace LeaveManagement.Models.ViewModels
 {
     public class EmployeeLeaveRequestVM
     {
-        public EmployeeLeaveRequestVM(List<EmployeeLeaveRequestVM> leaveAllocations, List<LeaveRequestVM> leaveRequests)
+        public EmployeeLeaveRequestVM(List<LeaveAllocationsVM> leaveAllocations, List<LeaveRequestVM> leaveRequests)
         {
             LeaveAllocations = leaveAllocations;
             LeaveRequests = leaveRequests;
         }    
-        public List<EmployeeLeaveRequestVM> LeaveAllocations { get; set; }
+        public List<LeaveAllocationsVM> LeaveAllocations { get; set; }
         public List<LeaveRequestVM> LeaveRequests { get; set; }
     }
 }

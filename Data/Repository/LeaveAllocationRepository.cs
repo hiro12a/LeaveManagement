@@ -36,7 +36,7 @@ namespace LeaveManagement.Data.Repository
             return await _db.LeaveAllocations.AnyAsync(u => u.EmployeeId == employeeId && u.LeaveTypeId == leaveTypeId && u.Period == period);
         }
 
-        public async Task<EmployeeAllocationVM> EmployeeAllocationVM(string employeeId)
+        public async Task<EmployeeAllocationVM> GetEmployeeAllocation(string employeeId)
         {
             // Lambda expression to get the LeaveType and leave allocation
             // Include makes sure we get data from leaveType
@@ -52,7 +52,12 @@ namespace LeaveManagement.Data.Repository
             return employeeAllocationModel;
         }
 
-        public async Task<EditLeaveAllocationsVM> GetEmployeeAllocation(int id)
+        public async Task<LeaveAllocations?> GetEmployeeAllocationLeave(string employeeId, int leaveTypeId)
+        {
+            return await _db.LeaveAllocations.FirstOrDefaultAsync(u=>u.EmployeeId == employeeId && u.LeaveTypeId == leaveTypeId);
+        }
+
+        public async Task<EditLeaveAllocationsVM> GetEmployeeAllocations(int id)
         {
             var allocation = await _db.LeaveAllocations.Include(q => q.LeaveType).FirstOrDefaultAsync(q => q.Id == id);
 

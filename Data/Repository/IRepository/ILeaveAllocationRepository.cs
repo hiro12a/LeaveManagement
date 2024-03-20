@@ -11,7 +11,8 @@ namespace LeaveManagement.Data.Repository.IRepository
     {
         Task LeaveAllocation(int leaveTypeId);
         Task<bool> AllocationExists(string employeeId, int leaveTypeId, int period);
-        Task<EmployeeAllocationVM> EmployeeAllocationVM(string employeeId);
-        Task<EditLeaveAllocationsVM> GetEmployeeAllocation(int id);
+        Task<EmployeeAllocationVM> GetEmployeeAllocation(string employeeId);
+        Task<LeaveAllocations?> GetEmployeeAllocationLeave(string employeeId, int leaveTypeId);
+        Task<EditLeaveAllocationsVM> GetEmployeeAllocations(int id);
     }
 }

@@ -32,7 +32,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequest" asp-action="Create">Apply For Leave</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">My Leave</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequest" asp-action="MyLeave">My Leave</a>
                         </li>
                         <li class="nav-item dropdown">
                             @if(User.IsInRole(SD.Role_Admin))
@@ -43,8 +43,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" asp-controller="Leave" asp-action="Index">Leave Types</a></li>
                                     <li><a class="dropdown-item" asp-controller="Employee" asp-action="EmployeeLeaveAllocation">Leave Allocations</a></li>
-                                    <li><a class="dropdown-item" asp-controller="LeaveRequest" asp-action="Create">Leave Requests</a></li>
-                                    <li><a class="dropdown-item" asp-controller="LeaveRequest" asp-action="MyLeave">My Leave</a></li>
+                                    <li><a class="dropdown-item" asp-controller="LeaveRequest" asp-action="Index">Leave Requests</a></li>
                                 </ul>
                             } 
                         </li>

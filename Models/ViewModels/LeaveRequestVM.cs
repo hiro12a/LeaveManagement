@@ -24,9 +24,10 @@ namespace LeaveManagement.Models.ViewModels
         public bool? Approved { get; set; }
         public bool Cancelled { get; set; }
 
-        public string? RequestingEmployeeId { get; set; }
+        public string? RequestEmployeeId { get; set; }
         public EmployeeListVM? Employee { get; set; }
 
+        [DisplayName("Number of Days")]
         public int NumberOfDays { get; set; }
     }
 }

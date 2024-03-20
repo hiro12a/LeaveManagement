@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using LeaveManagement.Data.Repository.IRepository;
 using LeaveManagement.Models.ViewModels;
+using LeaveManagement.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,6 +29,7 @@ namespace LeaveManagement.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<IActionResult> Index()
         {
             var model = await _leaveRequest.GetAdminLeaveRequestList();
@@ -53,7 +55,7 @@ namespace LeaveManagement.Controllers
                 if(ModelState.IsValid)
                 {
                     await _leaveRequest.CreateLeaveRequest(model);
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(MyLeave));
                 }
             }
             catch (Exception ex)
@@ -65,9 +67,39 @@ namespace LeaveManagement.Controllers
             return View(model);       
         }
 
+        [Authorize(Roles = SD.Role_Admin)]
+        public async Task<IActionResult> ApproveRequest(int id, bool approved)
+        {  
+            try
+            {
+                await _leaveRequest.ChangeApprovalStatus(id, approved);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An Error Has Occured. Please Try Again Later");
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        public async Task<IActionResult> Cancel(int id)
+        {
+            try
+            {
+                await _leaveRequest.CancelLeaveRequest(id);
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An Error Has Occured. Please Try Again Later");
+            }
+            return RedirectToAction(nameof(MyLeave));
+        }
+
         public async Task<IActionResult> MyLeave()
         {
-            return View();
+            var model = await _leaveRequest.GetMyLeaveDetails();
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -12,5 +12,9 @@ namespace LeaveManagement.Data.Repository.IRepository
         Task CreateLeaveRequest(LeaveRequestCreateVM leaveRequestCreateVM);
         Task<AdminLeaveRequestViewVM> GetAdminLeaveRequestList();
         Task<EmployeeLeaveRequestVM> GetMyLeaveDetails();
+        Task<List<LeaveRequest>> GetAllAsync(string employeeId);
+        Task ChangeApprovalStatus(int leaveRequestId, bool approved);
+        Task<LeaveRequestVM?> GetLeaveRequestAsync(int? id);
+        Task CancelLeaveRequest(int leaveRequestId);
     }
 }
