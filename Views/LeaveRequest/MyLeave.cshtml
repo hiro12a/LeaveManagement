@@ -5,11 +5,11 @@
 }
 
 <div class="card" >
-  <div class="card-header">
-    <h2 class="text-center">Leave Allocations</h2>
+  <div class="card-header bg-dark">
+    <h2 class="text-center text-white">Leave Allocations</h2>
   </div>
-
-  <table class="table table-bordered">
+</div>
+<table class="table table-bordered bg-white">
     <thead>
         <tr>
             <td class="fw-bold">Leave Type</td>
@@ -28,12 +28,11 @@
         }
     </tbody>
   </table>
-</div>
 
 <hr/>
 <h2>Current Requests</h2>
-<table class="table">
-    <thead>
+<table class="table bg-white">
+    <thead class="bg-dark text-white">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.LeaveRequests[0].StartDate)

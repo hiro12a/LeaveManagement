@@ -31,6 +31,8 @@ namespace LeaveManagement.Models.ViewModels
         [DisplayName("Leave Reason")]
         public string? RequestComments {get;set;}
 
+        public int NumberOfDays {get;set;}
+
         // IValidatableObject allows for custom logic
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

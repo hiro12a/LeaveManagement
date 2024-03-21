@@ -53,6 +53,7 @@ namespace LeaveManagement.Controllers
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(LeaveType obj)
         {
             // Make sure modelstate is valid first

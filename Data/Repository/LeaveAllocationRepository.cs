@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using LeaveManagement.Data.Repository.IRepository;
 using LeaveManagement.Models;
@@ -80,6 +76,7 @@ namespace LeaveManagement.Data.Repository
             var period = DateTime.Now.Year;
             var leaveType = await _leaveTypeRepository.GetAsync(leaveTypeId);
             var allocations = new List<LeaveAllocations>();
+            var employeesWithNewAllocation = new List<Employee>();
 
             foreach (var employee in employees)
             {
@@ -93,6 +90,8 @@ namespace LeaveManagement.Data.Repository
                     Period = period,
                     NumberOfDays = leaveType.DefaultDays
                 });
+
+                employeesWithNewAllocation.Add(employee);
             }
 
             await AddRangeAsync(allocations);

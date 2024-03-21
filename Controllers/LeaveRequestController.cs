@@ -54,13 +54,20 @@ namespace LeaveManagement.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    await _leaveRequest.CreateLeaveRequest(model);
-                    return RedirectToAction(nameof(MyLeave));
+                    int daysRequested = (int)(model.EndDate - model.StartDate).TotalDays;
+                    if(daysRequested < model.NumberOfDays)
+                    {
+                        await _leaveRequest.CreateLeaveRequest(model);
+                        return RedirectToAction(nameof(MyLeave));
+                    }
+
+                    ModelState.AddModelError(string.Empty, "You do not have enough days left");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An Error Has Occured. Please Try Again Later");
+                _logger.LogError(ex, "Error Creating Leave Request");
+                throw;
             }
 
             model.LeaveTypes = new SelectList(await _leaveType.GetAllAsync(), "Id", "Name");
@@ -76,7 +83,8 @@ namespace LeaveManagement.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An Error Has Occured. Please Try Again Later");
+                _logger.LogError(ex, "Error Approving Leave Request");
+                throw;
             }
 
             return RedirectToAction(nameof(Index));
@@ -91,7 +99,8 @@ namespace LeaveManagement.Controllers
             }
             catch(Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An Error Has Occured. Please Try Again Later");
+                _logger.LogError(ex, "Error Canceling Leave Request");
+                throw;
             }
             return RedirectToAction(nameof(MyLeave));
         }

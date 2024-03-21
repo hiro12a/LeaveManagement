@@ -9,7 +9,7 @@ namespace LeaveManagement.Data.Repository.IRepository
 {
     public interface ILeaveRequestRepository : IRepository<LeaveRequest>
     {
-        Task CreateLeaveRequest(LeaveRequestCreateVM leaveRequestCreateVM);
+        Task<bool> CreateLeaveRequest(LeaveRequestCreateVM leaveRequestCreateVM);
         Task<AdminLeaveRequestViewVM> GetAdminLeaveRequestList();
         Task<EmployeeLeaveRequestVM> GetMyLeaveDetails();
         Task<List<LeaveRequest>> GetAllAsync(string employeeId);

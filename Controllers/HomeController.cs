@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LeaveManagement.Models;
+using Microsoft.AspNetCore.Diagnostics;
+using LeaveManagement.Utility;
 
 namespace LeaveManagement.Controllers;
 
@@ -15,7 +17,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        return RedirectToAction("MyLeave", "LeaveRequest");
     }
 
     public IActionResult Privacy()
@@ -23,9 +25,18 @@ public class HomeController : Controller
         return View();
     }
 
+    // Change Error from default to this to make it more readable 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+        var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>(); // Gets unhandled exception
+
+        if(exceptionHandlerPathFeature != null)
+        {
+            Exception exception = exceptionHandlerPathFeature.Error;
+            _logger.LogError(exception, $"Error Encountered By User: {this.User?.Identity?.Name} | Request Id: {requestId}");
+        }
+        return View(new ErrorViewModel {RequestId = requestId});
     }
 }

@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using LeaveManagement.Data.Repository.IRepository;
 using LeaveManagement.Models;
 using LeaveManagement.Models.ViewModels;
+using LeaveManagement.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -57,16 +54,21 @@ namespace LeaveManagement.Data.Repository
             await UpdateAsync(leaveRequest);
         }
 
-        public async Task CreateLeaveRequest(LeaveRequestCreateVM leaveRequestCreateVM)
+        public async Task<bool> CreateLeaveRequest(LeaveRequestCreateVM model)
         {
-            // Get the user who is logged in 
             var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
+            var leaveAllocation = await _leaveAllocationRepository.GetEmployeeAllocationLeave(user.Id, model.LeaveTypeId);
 
-            var leaveRequest = _mapper.Map<LeaveRequest>(leaveRequestCreateVM);
+            if(leaveAllocation == null)
+            {
+                return false;
+            }
+
+            var leaveRequest = _mapper.Map<LeaveRequest>(model);
             leaveRequest.DateRequested = DateTime.Now;
             leaveRequest.RequestEmployeeId = user.Id;
 
-            await AddAsync(leaveRequest);
+            return true;
         }
 
         public async Task<AdminLeaveRequestViewVM> GetAdminLeaveRequestList()
