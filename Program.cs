@@ -39,11 +39,6 @@ builder.Services.ConfigureApplicationCookie(option =>
     option.LoginPath = $"/Employee/Index";
 });
 
-// Allows us to use Serilog
-builder.Host.UseSerilog((ctx, lc) => 
-    lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,9 +54,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-// Uses Serilog
-app.UseSerilogRequestLogging();
 
 app.UseAuthorization();
 
