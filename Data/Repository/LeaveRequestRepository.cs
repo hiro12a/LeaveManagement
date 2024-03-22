@@ -64,9 +64,17 @@ namespace LeaveManagement.Data.Repository
                 return false;
             }
 
+            int daysRequested = (int)(model.EndDate - model.StartDate).TotalDays;
+            if(daysRequested > leaveAllocation.NumberOfDays)
+            {
+                return false;
+            }
+
             var leaveRequest = _mapper.Map<LeaveRequest>(model);
             leaveRequest.DateRequested = DateTime.Now;
             leaveRequest.RequestEmployeeId = user.Id;
+
+            await AddAsync(leaveRequest);
 
             return true;
         }

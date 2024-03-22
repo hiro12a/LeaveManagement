@@ -54,14 +54,14 @@ namespace LeaveManagement.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    int daysRequested = (int)(model.EndDate - model.StartDate).TotalDays;
-                    if(daysRequested < model.NumberOfDays)
+                    var isRequestValid = await _leaveRequest.CreateLeaveRequest(model);
+                    if(isRequestValid)
                     {
-                        await _leaveRequest.CreateLeaveRequest(model);
                         return RedirectToAction(nameof(MyLeave));
                     }
 
                     ModelState.AddModelError(string.Empty, "You do not have enough days left");
+                    ModelState.AddModelError(string.Empty, "Numer of Days left: " + model.NumberOfDays);
                 }
             }
             catch (Exception ex)

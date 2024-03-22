@@ -24,13 +24,15 @@ namespace LeaveManagement.Controllers
         private readonly IMapper _mapper;
         private readonly ILeaveAllocationRepository _leaveAllocation;
         private readonly ILeaveTypeRepository _leaveType;
+        private IConfiguration _configureion;
 
         public EmployeeController(UserManager<Employee> userManager, 
         RoleManager<IdentityRole> roleManager, 
         SignInManager<Employee> signInManager, 
         IMapper mapper,
         ILeaveAllocationRepository leaveAllocationRepository, 
-        ILeaveTypeRepository leaveType)
+        ILeaveTypeRepository leaveType,
+        IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -38,6 +40,7 @@ namespace LeaveManagement.Controllers
             _mapper = mapper;
             _leaveAllocation = leaveAllocationRepository;
             _leaveType = leaveType;
+            _configureion = configuration;
         }
 
         // Login Page
@@ -225,20 +228,10 @@ namespace LeaveManagement.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    var leaveAllocation = await _leaveAllocation.GetAsync(model.Id);
-                    if(leaveAllocation == null)
+                    if(await _leaveAllocation.UpdateEmployeeAllocation(model))
                     {
-                        return NotFound();
+                         return RedirectToAction(nameof(ViewAllocation), new { id = model.EmployeeId });
                     }
-
-                    // Update these from the model
-                    leaveAllocation.Period = model.Period;
-                    leaveAllocation.NumberOfDays = model.NumberOfDays;
-
-                    // Commit  and save
-                    await _leaveAllocation.UpdateAsync(leaveAllocation);
-
-                    return RedirectToAction(nameof(ViewAllocation), new { id = model.EmployeeId });
                 }        
             }
             catch(Exception ex)
@@ -249,6 +242,22 @@ namespace LeaveManagement.Controllers
             model.Employee = _mapper.Map<EmployeeListVM>(await _userManager.FindByIdAsync(model.EmployeeId));  
             model.LeaveType = _mapper.Map<LeaveTypeVM>(await _leaveType.GetAsync(model.LeaveTypeId));
             return View(model);
+        }
+
+        public async Task<IActionResult> EmployeeLogin(LoginVM loginVM)
+        {
+            await _signInManager.PasswordSignInAsync(_configureion.GetValue<string>("Credential:employeeEmail"),
+             _configureion.GetValue<string>("Credential:password"), loginVM.RememberMe, lockoutOnFailure: false);
+
+            return RedirectToAction("MyLeave", "LeaveRequest");
+        }
+
+        public async Task<IActionResult> AdminLogin(LoginVM loginVM)
+        {
+           await _signInManager.PasswordSignInAsync(_configureion.GetValue<string>("Credential:adminEmail"),
+             _configureion.GetValue<string>("Credential:password"), loginVM.RememberMe, lockoutOnFailure: false);
+
+            return RedirectToAction("Index", "LeaveRequest");
         }
     }
 }

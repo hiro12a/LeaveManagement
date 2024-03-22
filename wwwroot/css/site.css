@@ -21,26 +21,26 @@ body {
   margin-bottom: 60px;
 }
 
-.hr-text {
-  border: 0;
-  line-height: 1em;
-  position: relative;
-  text-align: center;
-  height: 1.5em;
-  font-size: 14px;
-  margin: 30px 15px;
-}
-
-.hr-text {
-  font-size: 30px;
+.text-divider {
+  --text-divider-gap: 1rem;
   display: flex;
   align-items: center;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
-.hr-text::before, .divider::after {
-  flex: 1;
+.text-divider::before,
+.text-divider::after {
   content: '';
-  padding: 3px;
-  background-color: black;
-  margin: 5px;
+  height: 1px;
+  background-color: silver;
+  flex-grow: 1; 
+}
+.text-divider::before {
+  margin-right: var(--text-divider-gap);
+}
+
+.text-divider::after {
+  margin-left: var(--text-divider-gap);
 }
