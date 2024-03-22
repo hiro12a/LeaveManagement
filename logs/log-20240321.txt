@@ -240,3 +240,14 @@
 2024-03-21 17:07:32.471 -04:00 [INF] HTTP GET /Employee/Index responded 200 in 16.8794 ms
 2024-03-21 17:07:37.533 -04:00 [INF] HTTP GET /Employee/Index responded 200 in 17.8631 ms
 2024-03-21 17:07:50.844 -04:00 [INF] HTTP GET /Employee/Index responded 200 in 17.1433 ms
+2024-03-21 17:42:32.701 -04:00 [INF] HTTP POST / responded 302 in 696.9589 ms
+2024-03-21 17:42:32.710 -04:00 [INF] HTTP GET /Home responded 302 in 0.5778 ms
+2024-03-21 17:42:32.882 -04:00 [INF] HTTP GET /LeaveRequest/MyLeave responded 200 in 166.5606 ms
+2024-03-21 17:42:36.501 -04:00 [INF] HTTP GET /Employee/Logout responded 302 in 2.4038 ms
+2024-03-21 17:42:36.504 -04:00 [INF] HTTP GET /Home responded 302 in 0.0647 ms
+2024-03-21 17:42:36.507 -04:00 [INF] HTTP GET /LeaveRequest/MyLeave responded 302 in 0.1056 ms
+2024-03-21 17:42:36.511 -04:00 [INF] HTTP GET /Employee/Index responded 200 in 1.5046 ms
+2024-03-21 17:42:39.972 -04:00 [INF] HTTP POST / responded 302 in 303.7519 ms
+2024-03-21 17:42:39.976 -04:00 [INF] HTTP GET /Home responded 302 in 0.0553 ms
+2024-03-21 17:42:40.135 -04:00 [INF] HTTP GET /LeaveRequest/MyLeave responded 200 in 156.7255 ms
+2024-03-21 17:51:58.865 -04:00 [INF] Application is shutting down...
