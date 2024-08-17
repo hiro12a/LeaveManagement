@@ -19,3 +19,4 @@ bin-release/
 appsettings.json
 appsettings.Development.json
 appsettings.Production.json
+*.json

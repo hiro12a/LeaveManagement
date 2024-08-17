@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Google Cloud Secret Manager Client
-string googleCredentialsFilePath = "Data/ksortreeservice-414322-4a6b6e064aa0.json";
+var googleCredentialsFilePath = builder.Configuration.GetValue<string>("GoogleCloud:CredentialsFilePath");
 
 // Parse the JSON string to create the GoogleCredential object
 if (!File.Exists(googleCredentialsFilePath))
