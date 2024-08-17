@@ -22,10 +22,6 @@ jobs:
           dotnet-version: '8.x'
           include-prerelease: true
 
-      - name: Set Google Credentials
-        run: echo "GOOGLESECRETS=${{ secrets.GOOGLESECRETS }}" >> $GITHUB_ENV
-
-
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
@@ -52,6 +48,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: .net-app
+      
+      - name: Set Google Credentials
+        run: echo "GOOGLESECRETS=${{ secrets.GOOGLESECRETS }}" >> $GITHUB_ENV
       
       - name: Login to Azure
         uses: azure/login@v1
