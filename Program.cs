@@ -5,36 +5,40 @@ using LeaveManagement.Models;
 using LeaveManagement.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using Google.Cloud.SecretManager.V1;
 using Google.Apis.Auth.OAuth2;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-// Configure and register the SecretManagerService
-builder.Services.AddSingleton<SecretManagerService>();
-
-// Configure the DbContext by fetching the secret asynchronously
-var secretService = builder.Services.BuildServiceProvider().GetRequiredService<SecretManagerService>();
+// Configure the Secret Manager client
+var client = SecretManagerServiceClient.Create();
 string projectId = "ksortreeservice-414322"; // Replace with your actual project ID
-string secretId = "LeaveManagerDB"; // The name of your secret
-string googleSecret = "GOOGLESECRETSCREDENTIAL";
+string googleSecretId = "GOOGLESECRETSCREDENTIAL"; // Your Google Cloud secret ID
+string dbSecretId = "LeaveManagerDB"; // Your database connection string secret ID
 
 try
 {
-    var client = SecretManagerServiceClient.Create();
-    var secretVersionName = new SecretVersionName(projectId, googleSecret, "latest");
-    var secretVersion = client.AccessSecretVersion(secretVersionName);
-    var secretPayload = secretVersion.Payload.Data.ToStringUtf8();
+    // Access the Google credentials secret
+    var googleSecretVersionName = new SecretVersionName(projectId, googleSecretId, "latest");
+    var googleSecretVersion = client.AccessSecretVersion(googleSecretVersionName);
+    var googleSecretPayload = googleSecretVersion.Payload.Data.ToStringUtf8();
+    
+    var googleCredential = GoogleCredential.FromJson(googleSecretPayload);
 
-    string connectionString = await secretService.GetSecretAsync(projectId, secretId);
+    // Access the database connection string secret
+    var dbSecretVersionName = new SecretVersionName(projectId, dbSecretId, "latest");
+    var dbSecretVersion = client.AccessSecretVersion(dbSecretVersionName);
+    var dbSecretPayload = dbSecretVersion.Payload.Data.ToStringUtf8();
 
     // Register the DbContext with the retrieved connection string
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
+        options.UseNpgsql(dbSecretPayload));
+
+    // Use GoogleCredential if needed
+    // For example, configure Google Cloud services that require authentication
+    // You can pass googleCredential to other services or clients as needed
+
 }
 catch (Exception ex)
 {
@@ -42,7 +46,10 @@ catch (Exception ex)
     Console.WriteLine($"Error retrieving secret: {ex.Message}");
 }
 
-// For Identity. Allows us to add extra field to IdentityUser
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+// Add other services and configurations as needed
 builder.Services.AddIdentity<Employee, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
