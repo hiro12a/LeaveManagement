@@ -12,22 +12,7 @@ using Google.Apis.Auth.OAuth2;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Google Cloud Secret Manager Client
-string googleCredentialsJson = Environment.GetEnvironmentVariable("GOOGLESECRETS");
 
-if (string.IsNullOrEmpty(googleCredentialsJson))
-{
-    throw new Exception("The Google credentials are not set. Ensure the 'GOOGLESECRETS' environment variable is configured.");
-}
-
-// Parse the JSON string to create the GoogleCredential object
-var credential = GoogleCredential.FromJson(googleCredentialsJson);
-
-// Create the Secret Manager client using the credentials
-var secretManagerClient = new SecretManagerServiceClientBuilder
-{
-    // Assign the credentials
-    Credential = credential
-}.Build();
 
 
 // Add services to the container.
