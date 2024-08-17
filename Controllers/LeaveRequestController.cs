@@ -50,11 +50,15 @@ namespace LeaveManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaveRequestCreateVM model)
         {
+            model.StartDate = model.StartDate.ToUniversalTime();
+            model.EndDate = model.EndDate.ToUniversalTime();
+
             try
             {
                 if(ModelState.IsValid)
                 {
                     var isRequestValid = await _leaveRequest.CreateLeaveRequest(model);
+
                     if(isRequestValid)
                     {
                         return RedirectToAction(nameof(MyLeave));

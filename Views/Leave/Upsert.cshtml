@@ -4,7 +4,7 @@
 }
 <!--Depending on the id, it'll show update or create-->
 <h1>@(Model.Id !=0? "Update" : "Create") Leave Types</h1>
-<div class="w-50">
+<div style="width:100%">
     <form method="post">
         <input hidden asp-for="Id">
         <div class="form-control border-0 pb-3">

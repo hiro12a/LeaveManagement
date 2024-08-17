@@ -6,19 +6,39 @@ using LeaveManagement.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Google.Cloud.SecretManager.V1;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Configure and register the SecretManagerService
+builder.Services.AddSingleton<SecretManagerService>();
 
-// Connect to database
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections")));
+// Configure the DbContext by fetching the secret asynchronously
+var secretService = builder.Services.BuildServiceProvider().GetRequiredService<SecretManagerService>();
+string projectId = "ksortreeservice-414322"; // Replace with your actual project ID
+string secretId = "LeaveManagerDB"; // The name of your secret
 
-// For Identity. Allows us to add extra field to identityUser
-builder.Services.AddIdentity<Employee, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+try
+{
+    string connectionString = await secretService.GetSecretAsync(projectId, secretId);
+
+    // Register the DbContext with the retrieved connection string
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(connectionString));
+}
+catch (Exception ex)
+{
+    // Handle exceptions when retrieving secrets
+    Console.WriteLine($"Error retrieving secret: {ex.Message}");
+}
+
+// For Identity. Allows us to add extra field to IdentityUser
+builder.Services.AddIdentity<Employee, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 // Automapper
 builder.Services.AddAutoMapper(typeof(Mapper));
@@ -26,13 +46,13 @@ builder.Services.AddAutoMapper(typeof(Mapper));
 // Allows us to use IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
-// Reference Repository
+// Register repositories
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
 builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
 
-// Redirect
+// Configure application cookie
 builder.Services.ConfigureApplicationCookie(option =>
 {
     option.AccessDeniedPath = $"/Employee/AccessDenied";
@@ -41,21 +61,22 @@ builder.Services.ConfigureApplicationCookie(option =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Ensure this is called before Authorization
 app.UseAuthorization();
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 app.MapControllerRoute(
     name: "default",

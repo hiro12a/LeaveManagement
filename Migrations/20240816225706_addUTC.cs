@@ -5,7 +5,7 @@
 namespace LeaveManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMoreSttuff : Migration
+    public partial class addUTC : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

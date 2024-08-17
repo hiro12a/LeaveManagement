@@ -5,7 +5,7 @@
 namespace LeaveManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class AddBaseEntity : Migration
+    public partial class addTimeOffSet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
