@@ -7,8 +7,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Google.Cloud.SecretManager.V1;
+using Google.Apis.Auth.OAuth2;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Google Cloud Secret Manager Client
+string credentialPath = "Data/ksortreeservice-414322-4a6b6e064aa0.json"; // Update to your actual path
+var credential = GoogleCredential.FromFile(credentialPath);
+
+// Create the Secret Manager client with the credentials
+var secretManagerClient = new SecretManagerServiceClientBuilder
+{
+    // Use the credential directly with SecretManagerServiceClientBuilder
+    CredentialsPath = credentialPath
+}.Build();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
