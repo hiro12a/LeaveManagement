@@ -11,24 +11,6 @@ using Google.Apis.Auth.OAuth2;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Google Cloud Secret Manager Client
-string googleCredentialsJson = "Data/ksortreeservice-414322-fab8f55f2a05-secretViewer";
-
-if (!File.Exists(googleCredentialsJson))
-{
-    throw new Exception($"Google credentials file not found at path: {googleCredentialsJson}");
-}
-// Parse the JSON string to create the GoogleCredential object
-var credential = GoogleCredential.FromFile(googleCredentialsJson);
-
-// Create the Secret Manager client using the credentials
-var secretManagerClient = new SecretManagerServiceClientBuilder
-{
-    // Assign the credentials
-    Credential = credential
-}.Build();
-
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -39,9 +21,15 @@ builder.Services.AddSingleton<SecretManagerService>();
 var secretService = builder.Services.BuildServiceProvider().GetRequiredService<SecretManagerService>();
 string projectId = "ksortreeservice-414322"; // Replace with your actual project ID
 string secretId = "LeaveManagerDB"; // The name of your secret
+string googleSecret = "GOOGLESECRETSCREDENTIAL";
 
 try
 {
+    var client = SecretManagerServiceClient.Create();
+    var secretVersionName = new SecretVersionName(projectId, googleSecret, "latest");
+    var secretVersion = client.AccessSecretVersion(secretVersionName);
+    var secretPayload = secretVersion.Payload.Data.ToStringUtf8();
+
     string connectionString = await secretService.GetSecretAsync(projectId, secretId);
 
     // Register the DbContext with the retrieved connection string
