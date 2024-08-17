@@ -16,7 +16,7 @@ string googleCredentialsJson = Environment.GetEnvironmentVariable("GOOGLESECRETS
 
 if (string.IsNullOrEmpty(googleCredentialsJson))
 {
-    throw new Exception("The Google credentials are not set. Ensure the 'GOOGLE_APPLICATION_CREDENTIALS' environment variable is configured.");
+    throw new Exception("The Google credentials are not set. Ensure the 'GOOGLESECRETS' environment variable is configured.");
 }
 
 // Parse the JSON string to create the GoogleCredential object

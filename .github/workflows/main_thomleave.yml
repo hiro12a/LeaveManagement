@@ -25,6 +25,7 @@ jobs:
       - name: Set Google Credentials
         run: echo "GOOGLESECRETS=${{ secrets.GOOGLESECRETS }}" >> $GITHUB_ENV
 
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
