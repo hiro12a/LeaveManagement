@@ -22,17 +22,10 @@ builder.Services.AddSingleton<SecretManagerService>();
 var secretService = builder.Services.BuildServiceProvider().GetRequiredService<SecretManagerService>();
 
 string projectId = "ksortreeservice-414322"; // Replace with your actual project ID
-string googleCredential = "GOOGLESECRETSCREDENTIAL";
 string secretId = "LeaveManagerDB"; // The name of your secret
 
 try
 {
-    // Create the Secret Manager client for google credentials
-    var client = SecretManagerServiceClient.Create();
-    var secretName = new SecretVersionName(projectId, googleCredential, "latest");
-    var secretVersion = client.AccessSecretVersion(secretName);
-    var secretPayload = secretVersion.Payload.Data.ToStringUtf8();
-
     string connectionString = await secretService.GetSecretAsync(projectId, secretId);
 
     // Register the DbContext with the retrieved connection string
