@@ -19,7 +19,7 @@ string googleCredentialsFilePath = "Data/ksortreeservice-414322-4a6b6e064aa0.jso
 // Parse the JSON string to create the GoogleCredential object
 if (!File.Exists(googleCredentialsFilePath))
 {
-    throw new Exception($"Google credentials file not found at path: {googleCredentialsFilePath}");
+    throw new Exception($"Google credentials file not found at the path: {googleCredentialsFilePath}");
 }
 
 // Parse the JSON file to create the GoogleCredential object
