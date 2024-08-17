@@ -50,7 +50,7 @@ jobs:
           name: .net-app
       
       - name: Set Google Credentials
-        run: echo "GOOGLESECRETS=${{ secrets.GOOGLESECRETS }}" >> $GITHUB_ENV
+        run: echo "GOOGLESECRETS=${{ secrets.GOOGLESECRETS }}"
       
       - name: Login to Azure
         uses: azure/login@v1
