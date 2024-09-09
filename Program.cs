@@ -16,7 +16,7 @@ builder.Services.AddControllersWithViews();
 
 // Register the DbContext with the retrieved connection string
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnections")));
+    options.UseNpgsql(System.Environment.GetEnvironmentVariable("DefaultConnections")));
 
 // For Identity. Allows us to add extra field to IdentityUser
 builder.Services.AddIdentity<Employee, IdentityRole>()
