@@ -14,27 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Configure and register the SecretManagerService
-builder.Services.AddSingleton<SecretManagerService>();
+ // Fetch the connection string from configuration
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnections");
 
-// Configure the DbContext by fetching the secret asynchronously
-var secretService = builder.Services.BuildServiceProvider().GetRequiredService<SecretManagerService>();
-string projectId = "ksortreeservice-414322"; // Replace with your actual project ID
-string secretId = "LeaveManagerDB"; // The name of your secret
-
-try
-{
-    string connectionString = await secretService.GetSecretAsync(projectId, secretId);
-
-    // Register the DbContext with the retrieved connection string
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
-}
-catch (Exception ex)
-{
-    // Handle exceptions when retrieving secrets
-    Console.WriteLine($"Error retrieving secret: {ex.Message}");
-}
+// Register the DbContext with the retrieved connection string
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // For Identity. Allows us to add extra field to IdentityUser
 builder.Services.AddIdentity<Employee, IdentityRole>()
