@@ -14,18 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-
-// Register the DbContext with the connection string from environment variables or App Service settings
+// Register the DbContext with the retrieved connection string
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnections");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new InvalidOperationException("Connection string is not configured.");
-    }
-
-    options.UseNpgsql(connectionString);
-});
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnections")));
 
 // For Identity. Allows us to add extra field to IdentityUser
 builder.Services.AddIdentity<Employee, IdentityRole>()
